@@ -4,13 +4,14 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.datasets import boston_housing
 
+
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
 
-class_names = ['Футболка', 'Штаны', 'Свитер', 'Платье', 'Пальто', 'Сандали', 'Рубашка', 'Кроссовки', 'Сумка', 'Ботинки']
+class_names = ['Глубинные(интрузивные)', 'Излившиеся (эффузивные)', 'Цементированные', 'Рыхлые',
+               'Осадочные - хим. осадки', 'Видоизмененные осадочные породы', 'Органические отложения']
 
 x_train = x_train / 255
 x_test = x_test / 255
-
 
 model = keras.Sequential([keras.layers.Flatten(input_shape=(28, 28)),
                           keras.layers.Dense(128, activation="relu"),
