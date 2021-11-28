@@ -10,7 +10,7 @@ img_height = 256
 img_width = 256
 batch_size = 32
 checkpoint_path = "training_1/cp.ckpt"
-
+_model = None
 class_names = ["биотит",
                "борнит",
                "хрикосола",
@@ -49,7 +49,7 @@ ds_validation = tf.keras.preprocessing.image_dataset_from_directory(
 def create_model():
     _model = keras.Sequential(
         [
-            layers.Input((img_height, img_width, 3)),
+            layers.Input((img_height, img_width, 1)),
             layers.Conv2D(16, 3, padding="same"),
             layers.MaxPooling2D(),
             layers.Flatten(),
@@ -78,9 +78,9 @@ def fit_model():
     cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                      save_weights_only=True,
                                                      verbose=1)
-    model.fit(train, epochs=3, callbacks=[cp_callback])
+    model.fit(train, epochs=5, callbacks=[cp_callback])
     predictions = model.predict(ds_validation)
     print(class_names[np.where(predictions[0] == predictions[0].max())[0][0]])
 
 
-fit_model()
+# fit_model()
