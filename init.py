@@ -1,5 +1,6 @@
 import json
 
+import cv2
 import numpy as np
 import requests
 import telebot
@@ -8,22 +9,22 @@ from PIL import Image
 from skimage import transform
 
 import config
-from learning import create_model, checkpoint_path, class_names, img_height, img_width, ds_train
+from learning import create_model, checkpoint_path, class_names, img_height, img_width
 
 if __name__ == "__main__":
     model = create_model()
     model.load_weights(checkpoint_path)
-    loss, acc = model.evaluate(ds_train, verbose=2)
+    # loss, acc = model.evaluate(ds_train, verbose=2)
     client = telebot.TeleBot(config.token)
     print("FrameBot Started")
 
 
 def load(filename):
-    np_image = Image.open(filename)
-    image_tensor = tf.convert_to_tensor(np_image, dtype=tf.float32)
-    image_tensor = transform.resize(image_tensor, (img_height, img_width, 1))
-    image_tensor = tf.expand_dims(image_tensor, 0)
-    return image_tensor
+    image = cv2.imread(filename).copy()
+    image = cv2.resize(image, (img_width, img_height))
+    image = image.astype("float") / 255.0
+    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+    return image
 
 
 def get_file_path_by_id(file_id):
